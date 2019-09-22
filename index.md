@@ -1,4 +1,4 @@
-## Welcome to GitHub Pages
+## Welcome to MyPersonal Home Pages
 
 You can use the [editor on GitHub](https://github.com/eternal548/PersonalHomePage/edit/master/index.md) to maintain and preview the content for your website in Markdown files.
 

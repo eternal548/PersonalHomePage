@@ -1,0 +1,165 @@
+body {
+    background-color: #020724;
+}
+
+header,footer {
+    background-color: #3D6271;
+    margin: 0em 4em 0.5em 4em;
+	padding-top: 0.5em;
+}
+
+article {
+    background-color: white;
+    max-width: 2048px;
+	margin:1.2em 4em 1.2em 4em;
+    padding: 0.5em 0.5em 0.3em 0.9em;
+}
+
+/*=============common============*/
+
+h1, h2, h3, nav, footer{
+    font-family: sans-serif;
+}
+
+p, time{
+    font-family:Georgia;
+}
+
+h3 {
+    font-size: 130%;
+    border-bottom: solid;
+    border-bottom-width: 1px;
+	margin: 0em 0em 0.3em 0em;
+}
+
+p {
+    padding-top: 0.1em;
+	padding-left: 0.1em;
+}
+
+/*=============header============*/
+
+header h1,h2{
+    color:white;
+}
+
+header h1{
+    font-size: 200%;
+    padding-bottom:0em;
+	padding-left:0.2em;
+}
+
+header h2{
+    font-size: 75%;
+    padding-bottom:0.7em;
+	padding-left:0.8em;
+}
+
+nav {
+    background-color: #94b4b3;
+	font-weight: bold;
+	padding-top: 0.4em;
+	padding-bottom:0.4em;
+	margin-left:0em;
+	word-spacing: 0.5em;
+}
+
+nav li:first-of-type{
+    margin-left:-1.8em;
+}
+
+nav li {
+    display: inline;
+    font-size: 110%;
+}
+
+li a{
+    color:#1e9cae;
+}
+
+/*=============article============*/
+
+section {
+    margin:0.2em 0em 2em 0em;
+}
+
+p:first-of-type {
+    color: grey;
+    font-style: italic;
+	padding-bottom:0.3em;
+}
+
+#purpleWord{
+    color:#ab6cc4;
+	font-weight:bold;
+}
+
+#blueWord{
+    color:#63d5e4;
+	font-weight:bold;
+}
+
+figure img {
+    border: solid;
+	border-color: grey;
+    border-width: 1px;
+	display: block;
+	height: 15em;
+	width:28em;
+	margin:0.8em 0em 0em 0em;
+    padding: 0.2em;
+}
+
+figcaption {
+    color: grey;
+	padding-left:0.1em;
+}
+
+#share {
+    height:1.5em;
+	width:28em;
+    background-image:url(images/grey.png);
+    margin:0.3em 0em 0em 0em;
+	padding-top:0.7em;
+}
+
+#related{
+    margin:0em 0em 0.5em 0em;
+}
+
+div{
+    padding-top:0.5em;
+	padding-bottom:0em;
+}
+
+time {
+    font-style: italic;
+    color: grey;
+}
+
+/*=============footer============*/
+
+footer {
+    color: pink;
+	margin:0em 4em 2em 4em;
+	padding: 0.5em;
+}
+
+footer a{
+    color:#63d5e4;
+	font-size:90%;
+	font-weight: bold;
+}
+
+footer p{
+    margin:0.7em 0em 0em 0em;
+}
+
+em{
+    color:white;
+	font-size:90%;
+	font-family:sans-serif;
+	word-spacing:0.3em;
+}
+
+

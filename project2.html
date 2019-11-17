@@ -1,0 +1,344 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <link href="reset3.css" rel="stylesheet">
+    <title>personal home page</title>
+</head>
+	
+<body>
+<!--upperIndex-->
+	<header>
+		<nav class="firstNav">
+			<ul>
+				<li><a href="index.html">AboutMe</a></li>
+                <li><a href="project.html">Project1</a></li>
+				<li><a href="project2.html">Project2</a></li>
+				<li><img src="images/flag.png" alt="there is a photo"/></li>
+			</ul>
+		</nav>
+	</header>
+<!--leftAside-->
+	<nav class="secNav">
+	    <div id="new-layers">
+		<img src="images/r4.png"  id="add-satellite-layer" width="60" height="60" alt="there is a photo"/>
+		<img src="images/r18.png" id="remove-satellite-layer" width="60" height="60" alt="there is a photo"/>
+		<img src="images/r2.png" id="add-roadnet-layer" width="60" height="60" alt="there is a photo"/>
+		<img src="images/r19.png" id="remove-roadnet-layer" width="60" height="60" alt="there is a photo"/>
+		</div>
+	</nav>
+<!---mainPart-->
+	<article>
+		<section>
+			<div id="container"></div>
+            <div class="input-card" style="width:13rem">                
+				<h4 id="text">Current central point</h4>
+				<span id="map-center">113.364236,23.124704</span>
+				<h4>language</h4>
+                <div id="lang">
+					<div class="input-item">
+						<input id="zh_cn" name="language" type="radio" checked="checked">
+						<span class="input-text">Chinese</span>
+					</div>
+                    <div class="input-item">
+						<input id="en" name="language" type="radio">
+						<span class="input-text">English</span>
+					</div>
+                    <div class="input-item">
+						<input id="zh_en" name="language" type="radio">
+						<span class="input-text">Chinese-English</span>
+					</div>
+                </div>
+				<h4>Set current city</h4>
+				<div class="input-item" id="city"> 
+					<input id="city-name" placeholder="广州市" type="text" >
+					<button class="btn" id="query">Go</button>
+                </div>
+				<h4>Weather forecast</h4>
+				<div id="weather">    
+	            <iframe 
+		            width="350px" 
+                    scrolling="no"
+                    height="100px"
+                    frameborder="0"
+                    src="http://i.tianqi.com/index.php?c=code&id=22&icon=1&py=guangzhou">
+				</iframe>
+				</div>
+				<h4>Stock market</h4>
+				<div id="stock">
+				<img src="http://image.sinajs.cn/newchart/daily/n/sh000001.gif" width="320px" height="200px" alt=""/>
+			    </div>
+			</div>
+            <script src="https://cache.amap.com/lbs/static/es5.min.js"></script>
+            <script src="https://webapi.amap.com/maps?v=1.4.15&key=aa9ce3da9f4ea38eb35a8ab8fe555288&&plugin=AMap.Scale,AMap.OverView,AMap.ToolBar"></script>
+			<script type="text/javascript" src="https://cache.amap.com/lbs/static/addToolbar.js"></script>
+            <script type="text/javascript">
+            //初始化地图	
+            var map = new AMap.Map('container', {
+				resizeEnable: true,
+                center: [113.364236,23.124704],
+                lang: "zh_cn" //可选值：en，zh_en, zh_cn
+            });
+			
+			//增加新地图图层
+    		// 构造官方卫星、路网图层
+    		var satelliteLayer = new AMap.TileLayer.Satellite();
+    		var roadNetLayer =  new AMap.TileLayer.RoadNet();
+
+    		//事件绑定
+			//增加和消除卫星图层
+   		 	document.querySelector("#add-satellite-layer").onclick = function() {
+			    map.add(satelliteLayer);
+    		}
+    		document.querySelector("#remove-satellite-layer").onclick = function() {
+      			map.remove(satelliteLayer);
+    		}
+            //增加和消除道路图层
+    		document.querySelector("#add-roadnet-layer").onclick = function() {
+      		    map.add(roadNetLayer);
+    		}
+    		document.querySelector("#remove-roadnet-layer").onclick = function() {
+      		    map.remove(roadNetLayer);
+    		}
+			
+			//设置主题
+			styleName = "amap://styles/light";
+            map.setMapStyle(styleName)
+				
+            //设置默认鼠标样式
+		    map.setDefaultCursor("crosshair");
+	
+		    //显示比例尺
+		    var scale = new AMap.Scale({ visible: false });
+			map.addControl(scale);
+			scale.show();
+				
+			//显示小组件
+			toolBar = new AMap.ToolBar({ visible: false });
+            map.addControl(toolBar);
+            toolBar.show();
+
+            //绑定radio点击事件
+            var radios = document.querySelectorAll("#lang input");
+            radios.forEach(function(ratio) {
+                ratio.onclick = setLang;
+            });
+            function setLang() {
+                map.setLang(this.id);
+            }
+		    
+			//根据cityname、adcode、citycode设置地图位置
+            function gotoCity() {
+	 			var val = document.querySelector('#city-name').value; //可以是cityname、adcode、citycode
+                if (!val) {
+					val = "北京市";
+                }
+                map.setCity(val);
+                log.info(`已跳转至${val}`);
+            }
+
+            //绑定查询点击、回车事件
+            document.querySelector('#query').onclick = gotoCity;
+            document.querySelector('#city-name').onkeydown = function(e) {
+				if (e.keyCode === 13) {
+					gotoCity();
+                    return false;
+                }
+                return true;
+            };
+			
+		    //实时坐标信息
+			var logMapinfo = function (){
+				var zoom = map.getZoom(); //获取当前地图级别
+                var center = map.getCenter(); //获取当前地图级别
+                document.querySelector("#map-center").innerText = center.toString();
+            };
+            logMapinfo();
+            function mapMovestart(){
+				document.querySelector("#text").innerText = 'Already to move';
+            }
+            function mapMove(){
+                logMapinfo();
+                document.querySelector("#text").innerText = 'Map is moving';
+            }
+            function mapMoveend(){
+                document.querySelector("#text").innerText = 'Moving is ended';
+            }
+            map.on('movestart', mapMovestart);
+            map.on('mapmove', mapMove);
+            map.on('moveend', mapMoveend);
+				
+			//增加图标
+			var marker = new AMap.Marker({
+				icon: "https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png",
+				position: [113.364236,23.124704]
+            });
+            map.add(marker);
+			var marker = new AMap.Marker({
+				icon: "https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png",
+				position: [113.273256,23.158484]
+            });
+            map.add(marker);
+			var marker = new AMap.Marker({
+				icon: "https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png",
+				position: [113.319261,23.0846]
+            });
+            map.add(marker);
+			var marker = new AMap.Marker({
+				icon: "https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png",
+				position: [113.386209,22.937658]
+            });
+            map.add(marker);
+		    
+		    //增加天气
+			AMap.plugin('AMap.Weather', function() {
+				var weather = new AMap.Weather();
+                //查询实时天气信息, 查询的城市到行政级别的城市，如朝阳区、杭州市
+                weather.getLive('天河区', function(err, data) {
+					if (!err) {
+						var str = [];
+                        str.push('城市/区：'  + data.city+'<br>');
+                        str.push('天气：' + data.weather+'<br>' );
+                        str.push('温度：' + data.temperature + '℃<br>');
+                        str.push('风力：' + data.windPower + ' 级<br>');
+                        str.push('空气湿度：' + data.humidity+'<br>' );
+                        str.push('发布时间：' + data.reportTime +'<br>');
+                        var marker = new AMap.Marker({
+							map: map, 
+							position: [113.364236,23.124704]
+						});
+						//新建窗口
+                        var infoWin = new AMap.InfoWindow({
+							content: '<div class="info" style="position:inherit;margin-bottom:0;">'+str.join('')+'</div><div class="sharp"</div>',
+                            isCustom:true,
+                            offset: new AMap.Pixel(0, -37)
+                        });
+						//点击窗口
+	                    AMap.event.addListener(marker,'click',function(){
+							infoWin.open(map,marker.getPosition());
+						});
+                        AMap.event.addListener(marker,'click',function(){
+							infoWin.close(map,marker.getPosition());
+						}); 
+                    }
+               });
+               weather.getLive('白云区', function(err, data) {
+					if (!err) {
+						var str = [];
+                        str.push('城市/区：'  + data.city+'<br>');
+                        str.push('天气：' + data.weather+'<br>' );
+                        str.push('温度：' + data.temperature + '℃<br>');
+                        str.push('风力：' + data.windPower + ' 级<br>');
+                        str.push('空气湿度：' + data.humidity+'<br>' );
+                        str.push('发布时间：' + data.reportTime +'<br>');
+                        var marker = new AMap.Marker({
+							map: map, 
+							position: [113.273256,23.158484]
+						});
+						//新建窗口
+                        var infoWin = new AMap.InfoWindow({
+							content: '<div class="info" style="position:inherit;margin-bottom:0;">'+str.join('')+'</div><div class="sharp"</div>',
+                            isCustom:true,
+                            offset: new AMap.Pixel(0, -37)
+                        });
+						//点击窗口
+	                    AMap.event.addListener(marker,'click',function(){
+							infoWin.open(map,marker.getPosition());
+						});
+                        AMap.event.addListener(marker,'click',function(){
+							infoWin.close(map,marker.getPosition());
+						}); 
+                    }
+               });
+               weather.getLive('海珠区', function(err, data) {
+					if (!err) {
+						var str = [];
+                        str.push('城市/区：'  + data.city+'<br>');
+                        str.push('天气：' + data.weather+'<br>' );
+                        str.push('温度：' + data.temperature + '℃<br>');
+                        str.push('风力：' + data.windPower + ' 级<br>');
+                        str.push('空气湿度：' + data.humidity+'<br>' );
+                        str.push('发布时间：' + data.reportTime +'<br>');
+                        var marker = new AMap.Marker({
+							map: map, 
+							position: [113.319261,23.0846]
+						});
+						//新建窗口
+                        var infoWin = new AMap.InfoWindow({
+							content: '<div class="info" style="position:inherit;margin-bottom:0;">'+str.join('')+'</div><div class="sharp"</div>',
+                            isCustom:true,
+                            offset: new AMap.Pixel(0, -37)
+                        });
+						//点击窗口
+	                    AMap.event.addListener(marker,'click',function(){
+							infoWin.open(map,marker.getPosition());
+						});
+                        AMap.event.addListener(marker,'click',function(){
+							infoWin.close(map,marker.getPosition());
+						}); 
+                    }
+               });
+               weather.getLive('番禺区', function(err, data) {
+					if (!err) {
+						var str = [];
+                        str.push('城市/区：'  + data.city+'<br>');
+                        str.push('天气：' + data.weather+'<br>' );
+                        str.push('温度：' + data.temperature + '℃<br>');
+                        str.push('风力：' + data.windPower + ' 级<br>');
+                        str.push('空气湿度：' + data.humidity+'<br>' );
+                        str.push('发布时间：' + data.reportTime +'<br>');
+                        var marker = new AMap.Marker({
+							map: map, 
+							position: [113.386209,22.937658]
+						});
+						//新建窗口
+                        var infoWin = new AMap.InfoWindow({
+							content: '<div class="info" style="position:inherit;margin-bottom:0;">'+str.join('')+'</div><div class="sharp"</div>',
+                            isCustom:true,
+                            offset: new AMap.Pixel(0, -37)
+                        });
+						//点击窗口
+	                    AMap.event.addListener(marker,'click',function(){
+							infoWin.open(map,marker.getPosition());
+						});
+                        AMap.event.addListener(marker,'click',function(){
+							infoWin.close(map,marker.getPosition());
+						}); 
+                    }
+               });
+
+			});
+            //各个地方的天气
+            pro.on("click",function(evt){
+				console.log(evt);
+        		var url = "http://i.tianqi.com/index.php?c=code&id=19&color=%23&bgc=%23&icon=2&py="+evt.graphic.attributes.pinyin+"&temp=1&num=1";
+        		var title = evt.graphic.attributes.name;
+        		var content = $("<div />");
+        		var weatherIframe = $("<iframe />").attr("width","320")
+        		.attr("height","120")
+        		.attr("frameborder","0")
+        		.attr("scrolling","no")
+        		.attr("src",url);
+        		content.append(weatherIframe);
+        		map.infoWindow.setTitle(title);
+        		map.infoWindow.setContent(content[0]);
+        		map.infoWindow.resize(340,125);
+        		map.infoWindow.show(evt.graphic.geometry);
+     		});
+	
+            </script>
+	   </section>
+	</article>
+<!--footer-->
+	<footer>
+		<a href="mailto:2207143187@qq.com">Contact Me</a>  &nbsp;&nbsp;&nbsp;&nbsp;
+        <img src="images/email.png" alt="Email this to someone" />
+        <img src="images/rss.png" alt="Syndicated content" />
+        <img src="images/twitter.png" alt="Share this on Twitter" />
+        <img src="images/facebook.png" alt="Share this on Facebook" />
+        <img src="images/flickr.png" alt="See this on Flickr" />
+		<p><em>Copyright &copy; 2019 Eternal</em></p>
+	</footer>
+</body>
+</html>
